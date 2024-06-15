@@ -180,15 +180,11 @@ class LucidDreamer:
             outfile = os.path.join('examples', f'{example_name}.ply')
             if not os.path.exists(outfile):
                 self.traindata = self.generate_pcd(rgb_cond, txt_cond, neg_txt_cond, pcdgenpath, seed, diff_steps)
-                print("Print the train data!")
-                print(self.traindata)
                 self.scene = Scene(self.traindata, self.gaussians, self.opt)        
                 self.training()
             outfile = self.save_ply(outfile)
         else:
             self.traindata = self.generate_pcd(rgb_cond, txt_cond, neg_txt_cond, pcdgenpath, seed, diff_steps)
-            print("Print the train data!")
-            print(self.traindata)
             self.scene = Scene(self.traindata, self.gaussians, self.opt)        
             self.training()
             self.timestamp = datetime.datetime.now().strftime('%y%m%d_%H%M%S')

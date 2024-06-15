@@ -373,8 +373,8 @@ def loadCameraPreset(traindata, presetdata):
     cam_infos = {}
     ## camera setting (for H, W and focal)
     fovx = traindata["camera_angle_x"] * 1.2
-    W, H = traindata["frames"][0]["image"].size
-    # W, H = traindata["W"], traindata["H"]
+    # W, H = traindata["frames"][0]["image"].size
+    W, H = traindata["W"], traindata["H"]
 
     for camkey in presetdata:
         cam_infos[camkey] = []
