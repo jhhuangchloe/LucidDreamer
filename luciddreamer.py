@@ -191,6 +191,7 @@ class LucidDreamer:
             if not os.path.exists(self.save_dir):
                 os.makedirs(self.save_dir)
             outfile = self.save_ply(os.path.join(self.save_dir, 'gsplat.ply'))
+        print("Training is done!")
         print(self.traindata)
         return outfile
     
