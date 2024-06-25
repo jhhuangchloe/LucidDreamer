@@ -346,6 +346,8 @@ class LucidDreamer:
                 negative_prompt=negative_prompt, generator=generator,
                 mask_image=mask2,
             )
+            # save image_curr as png file
+            image_curr.save('tmp.png')
 
         else: # if height and width are similar, do center crop
             if w_in > h_in:
