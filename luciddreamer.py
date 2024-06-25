@@ -424,7 +424,7 @@ class LucidDreamer:
                 mask_image=mask2, #Image.fromarray(np.round((1-mask2[:,:])*255.).astype(np.uint8))
             )
             depth_curr = self.d(image_curr)
-            image_curr.save('tmp.png')
+            image_curr.save(f'tmp_{i}.png')
 
 
             ### depth optimize
