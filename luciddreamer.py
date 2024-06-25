@@ -354,6 +354,7 @@ class LucidDreamer:
                 image_curr = rgb_cond.crop((int(w_in/2-h_in/2), 0, int(w_in/2+h_in/2), h_in)).resize((self.cam.W, self.cam.H))
             else: # w <= h
                 image_curr = rgb_cond.crop((0, int(h_in/2-w_in/2), w_in, int(h_in/2+w_in/2))).resize((self.cam.W, self.cam.H))
+            image_curr.save('tmp.png')
 
         render_poses = get_pcdGenPoses(pcdgenpath)
         depth_curr = self.d(image_curr)
