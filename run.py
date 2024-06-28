@@ -14,7 +14,7 @@ if __name__ == "__main__":
     parser.add_argument('--neg_text', '-nt', type=str, default='', help='Negative text prompt for scene generation')
 
     # Camera options
-    parser.add_argument('--campath_gen', '-cg', type=str, default='lookdown', choices=['lookdown', 'lookaround', 'rotate360', 'rotateobj'], help='Camera extrinsic trajectories for scene generation')
+    parser.add_argument('--campath_gen', '-cg', type=str, default='lookdown', choices=['lookdown', 'lookaround', 'rotate360', 'rotateobj', 'arc'], help='Camera extrinsic trajectories for scene generation')
     parser.add_argument('--campath_render', '-cr', type=str, default='llff', choices=['back_and_forth', 'llff', 'headbanging'], help='Camera extrinsic trajectories for video rendering')
 
     # Inpainting options
