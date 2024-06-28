@@ -333,21 +333,37 @@ def generate_seed_orbit(radius, n_views):
     Returns:
         np.ndarray: Array of shape (n_views, 3, 4) containing the poses.
     """
+    """
+    Generate poses for a camera orbiting around the center of an object in a 360-degree trajectory.
+
+    Args:
+        center (np.ndarray): The center point around which the camera orbits (3D coordinates).
+        radius (float): Radius of the orbit (distance from the object center).
+        n_views (int): Number of views (poses) to generate.
+
+    Returns:
+        np.ndarray: Array of shape (n_views, 3, 4) containing the poses.
+    """
+    center = np.array([0, 0, 0])
     N = n_views
     render_poses = np.zeros((N, 3, 4))
 
     for i in range(N):
         theta = (2 * np.pi * i) / N  # Angle in radians
-        x = radius * np.cos(theta)
-        z = radius * np.sin(theta)
+        x = center[0] + radius * np.cos(theta)
+        z = center[2] + radius * np.sin(theta)
+        y = center[1]  # Assuming the orbit is in the XZ plane at the same height as the center
         
         # Camera position
-        position = np.array([x, 0, z])
+        position = np.array([x, y, z])
         
-        # Camera always looks at the origin (0, 0, 0)
-        forward = -position / np.linalg.norm(position)
+        # Camera always looks at the center
+        forward = (center - position) / np.linalg.norm(center - position)
         up = np.array([0, 1, 0])
         right = np.cross(up, forward)
+        
+        # Recompute up to ensure orthogonality
+        up = np.cross(forward, right)
         
         # Rotation matrix
         rotation_matrix = np.stack([right, up, forward], axis=-1)
@@ -357,6 +373,7 @@ def generate_seed_orbit(radius, n_views):
         render_poses[i, :3, 3] = position
 
     return render_poses
+
 
 
 
