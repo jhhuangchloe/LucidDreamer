@@ -322,6 +322,44 @@ def generate_seed_nothing():
     return render_poses
 
 
+def generate_seed_orbit(radius, n_views):
+    """
+    Generate poses for a camera orbiting around the center of an object in a 360-degree trajectory.
+
+    Args:
+        radius (float): Radius of the orbit (distance from the object center).
+        n_views (int): Number of views (poses) to generate.
+
+    Returns:
+        np.ndarray: Array of shape (n_views, 3, 4) containing the poses.
+    """
+    N = n_views
+    render_poses = np.zeros((N, 3, 4))
+
+    for i in range(N):
+        theta = (2 * np.pi * i) / N  # Angle in radians
+        x = radius * np.cos(theta)
+        z = radius * np.sin(theta)
+        
+        # Camera position
+        position = np.array([x, 0, z])
+        
+        # Camera always looks at the origin (0, 0, 0)
+        forward = -position / np.linalg.norm(position)
+        up = np.array([0, 1, 0])
+        right = np.cross(up, forward)
+        
+        # Rotation matrix
+        rotation_matrix = np.stack([right, up, forward], axis=-1)
+        
+        # Fill in the pose matrix
+        render_poses[i, :3, :3] = rotation_matrix
+        render_poses[i, :3, 3] = position
+
+    return render_poses
+
+
+
 def generate_seed_lookaround():
     degsum = 60 
     thlist = np.concatenate((np.linspace(0, degsum, 4), np.linspace(0, -degsum, 4)[1:], np.linspace(0, degsum, 4), np.linspace(0, -degsum, 4)[1:], np.linspace(0, degsum, 4), np.linspace(0, -degsum, 4)[1:]))
@@ -495,6 +533,8 @@ def get_pcdGenPoses(pcdgenpath, argdict={}):
         render_poses = generate_seed_newpreset()
     elif pcdgenpath == 'hemisphere':
         render_poses = generate_seed_hemisphere(argdict['center_depth'])
+    elif pcdgenpath == 'rotateobj':
+        render_poses = generate_seed_orbit(362, 10)
     else:
         raise("Invalid pcdgenpath")
     return render_poses
