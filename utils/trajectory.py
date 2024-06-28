@@ -322,59 +322,19 @@ def generate_seed_nothing():
     return render_poses
 
 
-def generate_seed_orbit(radius, n_views):
-    """
-    Generate poses for a camera orbiting around the center of an object in a 360-degree trajectory.
-
-    Args:
-        radius (float): Radius of the orbit (distance from the object center).
-        n_views (int): Number of views (poses) to generate.
-
-    Returns:
-        np.ndarray: Array of shape (n_views, 3, 4) containing the poses.
-    """
-    """
-    Generate poses for a camera orbiting around the center of an object in a 360-degree trajectory.
-
-    Args:
-        center (np.ndarray): The center point around which the camera orbits (3D coordinates).
-        radius (float): Radius of the orbit (distance from the object center).
-        n_views (int): Number of views (poses) to generate.
-
-    Returns:
-        np.ndarray: Array of shape (n_views, 3, 4) containing the poses.
-    """
-    center = np.array([0, 0, 0])
+def generate_seed_circle(viewangle, n_views, radius):
     N = n_views
     render_poses = np.zeros((N, 3, 4))
-
     for i in range(N):
-        theta = (2 * np.pi * i) / N  # Angle in radians
-        x = center[0] + radius * np.cos(theta)
-        z = center[2] + radius * np.sin(theta)
-        y = center[1]  # Assuming the orbit is in the XZ plane at the same height as the center
-        
-        # Camera position
-        position = np.array([x, y, z])
-        
-        # Camera always looks at the center
-        forward = (center - position) / np.linalg.norm(center - position)
-        up = np.array([0, 1, 0])
-        right = np.cross(up, forward)
-        
-        # Recompute up to ensure orthogonality
-        up = np.cross(forward, right)
-        
-        # Rotation matrix
-        rotation_matrix = np.stack([right, up, forward], axis=-1)
-        
-        # Fill in the pose matrix
-        render_poses[i, :3, :3] = rotation_matrix
-        render_poses[i, :3, 3] = position
+        th = (viewangle / N) * i / 180 * np.pi
+        render_poses[i, :3, :3] = np.array([[np.cos(th), 0, np.sin(th)], 
+                                            [0, 1, 0], 
+                                            [-np.sin(th), 0, np.cos(th)]])
+        x_movement = radius * np.cos(th)
+        z_movement = radius * np.sin(th)
+        render_poses[i, :3, 3:4] = np.array([[x_movement], [0], [z_movement]])
 
     return render_poses
-
-
 
 
 def generate_seed_lookaround():
@@ -551,7 +511,7 @@ def get_pcdGenPoses(pcdgenpath, argdict={}):
     elif pcdgenpath == 'hemisphere':
         render_poses = generate_seed_hemisphere(argdict['center_depth'])
     elif pcdgenpath == 'rotateobj':
-        render_poses = generate_seed_orbit(1.0, 36)
+        render_poses = generate_seed_circle(360, 15, 5)
     else:
         raise("Invalid pcdgenpath")
     return render_poses
