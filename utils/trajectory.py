@@ -551,7 +551,7 @@ def get_pcdGenPoses(pcdgenpath, argdict={}):
     elif pcdgenpath == 'hemisphere':
         render_poses = generate_seed_hemisphere(argdict['center_depth'])
     elif pcdgenpath == 'rotateobj':
-        render_poses = generate_seed_orbit(362, 10)
+        render_poses = generate_seed_orbit(1.0, 36)
     else:
         raise("Invalid pcdgenpath")
     return render_poses
