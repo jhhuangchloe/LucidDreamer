@@ -332,7 +332,7 @@ def generate_seed_circle(viewangle, n_views, radius):
                                             [-np.sin(th), 0, np.cos(th)]])
         z_movement = radius - radius * np.cos(th)
         x_movement = radius * np.sin(th)
-        render_poses[i, :3, 3:4] = np.array([[x_movement], [0], [z_movement]])
+        render_poses[i, :3, 3:4] = np.array([[x_movement], [0], [-z_movement]])
 
     return render_poses
 
